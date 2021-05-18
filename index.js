@@ -1,45 +1,59 @@
-// module.exports = () => {
-//   // ...
-// };
+const fs = require("fs");
+const axios = require("axios");
+const marked = require("marked");
+const jsdom = require("jsdom");
+const { resolve } = require("path");
+const { rejects } = require("assert");
 
-const Fs = require("fs");
+const { JSDOM } = jsdom;
 
-const regEx = /(\[[^\s].*\])(\([http]+.*\))/gi;
-// const regExText = /(\[[^\s](.*)\])/gi;
-// const regExtLink = /(\([http]+.*\))/gi;
-
-const dataLinks = [];
-// console.log(Fs.readFile('./README.md', 'utf8', callback));
-
-// function callback(err, data) {
-//   if (err) throw err;
-//   console.log(data);
-// }
-
-try {
-  const data = Fs.readFileSync('./README.md', 'utf8');
-  const listLinks = [...data.matchAll(regEx)];
-  // console.log(listLinks);
-  // for (let i = 0; i < listLinks.length; i++) {
-  //     dataLinks.push({ text: listLinks[i].match(regExText), link: listLinks[i].match(regExtLink) });
-
-  listLinks.forEach((element) => {
-    dataLinks.push({ text: element[1], link: element[2] });
+function getListLink(pathMd) {
+  const dataLinks = [];
+  const data = fs.readFileSync(pathMd, 'utf8');
+  const toHtml = marked(data);
+  const dom = new JSDOM(toHtml);
+  const tagsA = dom.window.document.querySelectorAll("a");
+  tagsA.forEach((element) => {
+    if (element.href.includes("http")) {
+      dataLinks.push({ text: element.textContent, link: element.href });
+    }
   });
-  //   listLinks.forEach((element) => {
-  //     dataLinks.push({ text: element.match(regExText), link: element.match(regExtLink) });
-  //     })
-  // // }
-  console.log(dataLinks);
-} catch (err) {
-  console.error(err);
+  return dataLinks;
 }
 
-// C:/Users/laboratoria/Downloads/3-column-preview-card-component-main/README-template.md
+function getStatusLink(link) {
+  return axios.get(link)
+    .then((result) => result)
+    .catch((error) => error);
+}
 
-// var cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-// var expresion = /[A-E]/gi;
-// var array_emparejamientos = cadena.match(expresion);
-// console.log(Array.isArray(array_emparejamientos));
+function mdLinks(pathLink, validate) {
+  // return new Promise(resolve, reject){
+  const linkList = getListLink(pathLink);
+  const arrayMdLinks = [];
+  linkList.forEach((element) => {
+    arrayMdLinks.push({
+      href: element.link,
+      text: element.text,
+      file: pathLink,
+    });
+  });
+  if (!validate) return arrayMdLinks;
+  arrayMdLinks.forEach((element) => {
+    const objCurrent = element;
+    getStatusLink(element.href)
+      .then((result) => {
+        objCurrent.status = result.status;
+        objCurrent.ok = result.statusText;
+      })
+      .catch((error) => {
+        objCurrent.status = error.response.status;
+        objCurrent.ok = error.response.statusText;
+      });
+  });
+  return arrayMdLinks;
 
-// (\[[^\s].*\])(\([http]+.*\))
+// }
+}
+
+mdLinks('./README.md', { validate: true });
