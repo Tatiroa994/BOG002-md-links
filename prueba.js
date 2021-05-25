@@ -1,23 +1,6 @@
-// const fs = require("fs");
+// funcion asincrona  recursiva para recorrer  directorios
 const path = require("path");
 const { readdir } = require("fs/promises");
-
-// function getAllFile2(pathCurrent) {
-//   let foundFile = [];
-//   if (path.extname(pathCurrent) === ".md") {
-//     foundFile.push(pathCurrent);
-//   }
-//   const isDir = fs.lstatSync(pathCurrent).isDirectory();
-//   if (isDir) {
-//     const pathList = fs.readdirSync(pathCurrent);
-//     for (let i = 0; i < pathList.length; i++) {
-//       // const pathJoin = path.join(pathCurrent, pathList[i]);
-//       foundFile = foundFile.concat(getAllFile2(pathList));
-//     }
-//   }
-//   return foundFile;
-// }
-//  console.log("resultado funcion ", getAllFile("./prueba"));
 
 function getAllFile(pathCurrent) {
   return readdir(pathCurrent, { withFileTypes: true })
@@ -35,10 +18,16 @@ function getAllFile(pathCurrent) {
     .catch((error) => console.log(error));
 }
 
-const pathPrueba = path.resolve("./prueba");
+
+const pathPrueba = path.resolve("./test");
+console.log(pathPrueba  );
 
 getAllFile(pathPrueba)
   .then((result) => {
-    Promise.all(result).then((r) => console.log(r.flat(4000)));
-  })
+    Promise.all(result).then((r) => {
+    const newArray = r.flat(4000);
+    const MdFiles = newArray.filter((element) => path.extname(element) === ".md")
+    console.log(MdFiles);
+  });
+})
   .catch((error) => console.log(error));

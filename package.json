@@ -1,15 +1,24 @@
 {
-  "name": "md-links",
-  "version": "0.1.0",
+  "name": "@tatiroa994/md-links",
+  "author": "Tatiana Roa <tatico994@gmail.com>",
+  "version": "1.0.0",
+  "description": "mdLinks analiza archivos .md para validar el estado de los links",
   "type": "commonjs",
   "bin": {
     "md-links": "./cli.js"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "jest --coverage --verbose"
+  },
+  "repository": {
+    "url": "git+https://github.com/Tatiroa994/BOG002-md-links.git",
+    "type": "git"
   },
   "devDependencies": {
     "eslint": "^7.26.0",

@@ -1,8 +1,12 @@
-const { mdLinks } = require("../index");
+const { mdLinks, getStatusLink } = require("../index");
 
 describe("mdLinks", () => {
-  it("Deberia retornar promesa al ingresar un directorio", () => {
+  it("Deberia retornar promesa al ingresar un directorio relativo", () => {
     expect(typeof mdLinks("./test")).toBe("object");
+  });
+
+  it("Deberia retornar promesa al ingresar un directorio absoluto", () => {
+    expect(typeof mdLinks("C:/Users/laboratoria/Desktop/Laboratoria/BOG002-md-links/test")).toBe("object");
   });
 
   it("Deberia retornar promesa al ingresar archivo md", () => {

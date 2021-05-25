@@ -18,10 +18,10 @@ function readFile(pathMd) {
   return mdData;
 }
 
-function getListLink(pathMd) {
+function getListLink(stringData) {
   // retorna links
   const dataLinks = [];
-  const data = readFile(pathMd);
+  const data = readFile(stringData);
   const toHtml = marked(data);
   const dom = new JSDOM(toHtml);
   const tagsA = dom.window.document.querySelectorAll("a");
@@ -87,6 +87,7 @@ function getAllFile(pathCurrent) {
 }
 
 function getArrayPromise(pathLink, file, validate) {
+  console.log(pathLink);
   // crea arreglo que se retornara en promesa
   const arrayMdLinks = getListLink(pathLink).map((objectLink) => ({
     ...objectLink,
@@ -132,5 +133,5 @@ function mdLinks(pathLink, options = {validate: false}) {
     }
   });
 }
-
- module.exports = {mdLinks};
+console.log(process.cwd()); // path.relative(process.cwd(), file)  
+ module.exports = {mdLinks, getStatusLink};
