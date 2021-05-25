@@ -16,7 +16,7 @@ function uniqueELement(array) {
 function stats(dataMd) {
   const total = dataMd.length;
   const unique = uniqueELement(dataMd);
-  process.stdout.write(`Total: ${total}\nunique: ${unique.length}`);
+ console.table({Total: total, Unique: unique.length});
 }
 
 function statsValidate(dataMd) {
@@ -24,18 +24,16 @@ function statsValidate(dataMd) {
   const unique = uniqueELement(dataMd);
   const broken = dataMd.filter((element) => element.ok === "Fail");
   const brokenUnique = uniqueELement(broken);
-  process.stdout.write(
-    `Total: ${total}\nUnique: ${unique.length}\nBroken: ${brokenUnique.length}`
+  console.table(
+  { Total: total, Unique: unique.length, Broken: brokenUnique.length}
   );
 }
 
 function validateFalse(dataMd) {
   dataMd.forEach((element) => {
     const text =
-      element.text.length > 50 ? element.text.substr(0, 50): element.text;
-    process.stdout.write(
-      `${element.file} ${element.href} ${text}\n`
-    );
+      element.text.length > 50 ? element.text.substr(0, 50) : element.text;
+    console.table({ href: element.href, text, file: element.file });
   });
 }
 
@@ -43,9 +41,13 @@ function validate(dataMd) {
   dataMd.forEach((element) => {
     const text =
       element.text.length > 50 ? element.text.substr(0, 50) : element.text;
-    process.stdout.write(
-      `${element.file} ${element.href} ${element.ok} ${element.status} ${text}\n`
-    );
+    console.table({
+      href: element.href,
+      text,
+      file: element.file,
+      ok: element.ok,
+      status: element.status,
+    });
   });
 }
 
