@@ -145,4 +145,6 @@ function mdLinks(pathLink, options = { validate: false }) {
     reject(new Error("file extension is not .md"));
   });
 }
-module.exports = { mdLinks };
+module.exports = { mdLinks, getStatusLink  };
+
+

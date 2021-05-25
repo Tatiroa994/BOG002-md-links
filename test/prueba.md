@@ -3,7 +3,7 @@ archivo 2
 
 ### Links
 
-*[Publicar packpage5](https://docs.npmjs.com/getting-started/publishing-npm-packages)
+*[Publicar packpage5](https://docs.npmjs.com/getting-started/publishingfdfsdf)
 * [Crear módulos en Node.js6](https://docs.npmjs.com/getting-started/publishing-npm-packages)
 * [Leer un archivo7](https://nodejs.org/api/fs.html#fs_fs_readfile_path_options_callback)
 * [Leer un directorio8](https://nodejs.org/api/fs.html#fs_fs_readdir_path_options_callback)
