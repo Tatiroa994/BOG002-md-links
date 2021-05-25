@@ -10,7 +10,7 @@ function readFile(pathMd) {
   // lee archivos md
   let mdData = [];
   if (typeof pathMd === "string") {
-    mdData.push = { data: fs.readFileSync(pathMd, "utf8"), file: pathMd };
+    mdData.push({ data: fs.readFileSync(pathMd, "utf8"), file: pathMd });
   } else {
     mdData = pathMd.map((file) => {
       const newObj = {
@@ -23,10 +23,11 @@ function readFile(pathMd) {
   return mdData;
 }
 
-function getListLink(stringData) {
+function getListLink(pathFile) {
   // retorna links
   const dataLinks = [];
-  const data = readFile(stringData);
+  const data = readFile(pathFile);
+  // console.log(data);
   data.forEach((e) => {
     const fileCurrent = path.relative(process.cwd(), e.file);
     const toHtml = marked(e.data);
@@ -138,10 +139,10 @@ function mdLinks(pathLink, options = { validate: false }) {
         reject(new Error("no files exist .md"));
       }
       resolve(getArrayPromise(allFile, options.validate));
-    } else if (path.extname(isAbsolute) !== ".md") {
-      reject(new Error("file extension is not .md"));
+    } else if (path.extname(isAbsolute) === ".md") {
+      resolve(getArrayPromise(isAbsolute, options.validate));
     }
-    resolve(getArrayPromise(isAbsolute, options.validate));
+    reject(new Error("file extension is not .md"));
   });
 }
 module.exports = { mdLinks };
