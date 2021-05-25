@@ -3,12 +3,11 @@ archivo 2
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
-
-[Linea de comando CLI](https://medium.com//a-guide-to-create-a-nodejs-commandkmne-c2166ad0452e)
-* [Linea de comando CLI](https://medium.com//a-guide-to-create-a-nodejs-commandkmne-c2166ad0452e)
-
+*[Publicar packpage5](https://docs.npmjs.com/getting-started/publishing-npm-packages)
+* [Crear módulos en Node.js6](https://docs.npmjs.com/getting-started/publishing-npm-packages)
+* [Leer un archivo7](https://nodejs.org/api/fs.html#fs_fs_readfile_path_options_callback)
+* [Leer un directorio8](https://nodejs.org/api/fs.html#fs_fs_readdir_path_options_callback)
+* 
 ## My process
 
 **Note: These are just examples. Delete this note and replace the list above with your own choices**

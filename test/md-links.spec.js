@@ -1,4 +1,4 @@
-const { mdLinks, getStatusLink } = require("../index");
+const { mdLinks } = require("../index");
 
 describe("mdLinks", () => {
   it("Deberia retornar promesa al ingresar un directorio relativo", () => {

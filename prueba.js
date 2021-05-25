@@ -20,7 +20,6 @@ function getAllFile(pathCurrent) {
 
 
 const pathPrueba = path.resolve("./test");
-console.log(pathPrueba  );
 
 getAllFile(pathPrueba)
   .then((result) => {

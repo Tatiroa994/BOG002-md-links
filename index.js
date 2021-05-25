@@ -8,12 +8,17 @@ const { JSDOM } = jsdom;
 
 function readFile(pathMd) {
   // lee archivos md
-  let mdData;
+  let mdData = [];
   if (typeof pathMd === "string") {
-    mdData = fs.readFileSync(pathMd, "utf8");
+    mdData.push = { data: fs.readFileSync(pathMd, "utf8"), file: pathMd };
   } else {
-    const data = pathMd.map((file) => fs.readFileSync(file, "utf8"));
-    mdData = data.toString();
+    mdData = pathMd.map((file) => {
+      const newObj = {
+        data: fs.readFileSync(file, "utf8"),
+        file,
+      };
+      return newObj;
+    });
   }
   return mdData;
 }
@@ -22,13 +27,20 @@ function getListLink(stringData) {
   // retorna links
   const dataLinks = [];
   const data = readFile(stringData);
-  const toHtml = marked(data);
-  const dom = new JSDOM(toHtml);
-  const tagsA = dom.window.document.querySelectorAll("a");
-  tagsA.forEach((element) => {
-    if (element.href.includes("http")) {
-      dataLinks.push({ href: element.href, text: element.textContent });
-    }
+  data.forEach((e) => {
+    const fileCurrent = path.relative(process.cwd(), e.file);
+    const toHtml = marked(e.data);
+    const dom = new JSDOM(toHtml);
+    const tagsA = dom.window.document.querySelectorAll("a");
+    tagsA.forEach((element) => {
+      if (element.href.includes("http")) {
+        dataLinks.push({
+          href: element.href,
+          text: element.textContent,
+          file: fileCurrent,
+        });
+      }
+    });
   });
   return dataLinks;
 }
@@ -57,7 +69,9 @@ function getStatusLink(objectLink) {
       .catch((error) => {
         if (error.response) {
           const { status } = error.response;
-          resolve(createObjectValidate(objectLink, { status, statusText:"Fail" }));
+          resolve(
+            createObjectValidate(objectLink, { status, statusText: "Fail" })
+          );
         }
         resolve(
           createObjectValidate(objectLink, {
@@ -66,7 +80,6 @@ function getStatusLink(objectLink) {
           })
         );
       });
-    
   });
 }
 
@@ -83,17 +96,13 @@ function getAllFile(pathCurrent) {
       foundFile = foundFile.concat(getAllFile(pathJoin));
     }
   }
+
   return foundFile;
 }
 
-function getArrayPromise(pathLink, file, validate) {
-  console.log(pathLink);
+function getArrayPromise(pathLink, validate) {
   // crea arreglo que se retornara en promesa
-  const arrayMdLinks = getListLink(pathLink).map((objectLink) => ({
-    ...objectLink,
-    file,
-  }));
-
+  const arrayMdLinks = getListLink(pathLink);
   if (!validate) {
     return arrayMdLinks;
   }
@@ -107,7 +116,7 @@ function getArrayPromise(pathLink, file, validate) {
     .catch((error) => error);
 }
 
-function mdLinks(pathLink, options = {validate: false}) {
+function mdLinks(pathLink, options = { validate: false }) {
   return new Promise((resolve, reject) => {
     // pathLink must be a string
     if (typeof pathLink !== "string") {
@@ -125,13 +134,14 @@ function mdLinks(pathLink, options = {validate: false}) {
 
     if (isDirectory) {
       const allFile = getAllFile(isAbsolute);
-      resolve(getArrayPromise(allFile, pathLink, options.validate));
-    } else if (path.extname(isAbsolute) === ".md") {
-      resolve(getArrayPromise(isAbsolute, pathLink, options.validate));
-    } else {
+      if (allFile.length === 0) {
+        reject(new Error("no files exist .md"));
+      }
+      resolve(getArrayPromise(allFile, options.validate));
+    } else if (path.extname(isAbsolute) !== ".md") {
       reject(new Error("file extension is not .md"));
     }
+    resolve(getArrayPromise(isAbsolute, options.validate));
   });
 }
-console.log(process.cwd()); // path.relative(process.cwd(), file)  
- module.exports = {mdLinks, getStatusLink};
+module.exports = { mdLinks };
